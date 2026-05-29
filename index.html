@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三条毕业之路 — 交互式新闻特稿</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #faf7f2;
+      --color-text: #2c2416;
+      --color-text-light: #6b5e4a;
+      --color-text-lighter: #9b8d7a;
+      --color-accent-a: #c76b3c;
+      --color-accent-a-soft: #faf2ed;
+      --color-accent-b: #5b8c5a;
+      --color-accent-b-soft: #f2f7f0;
+      --color-accent-c: #4a7a9b;
+      --color-accent-c-soft: #f0f4f7;
+      --color-answer-bg: #f5f1ea;
+      --color-border: #e8e1d5;
+      --color-border-light: #f0ebe2;
+      --color-nav-bg: rgba(250, 247, 242, 0.92);
+      --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      --max-width: 720px;
+      --nav-height: 52px;
+      --spacing-xs: 8px;
+      --spacing-sm: 16px;
+      --spacing-md: 28px;
+      --spacing-lg: 48px;
+      --spacing-xl: 80px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--nav-height);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+      font-size: 16px;
+    }
+
+    /* === 封面 === */
+    #cover {
+      width: 100%;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      line-height: 0;
+    }
+
+    #cover img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @media (min-width: 768px) {
+      #cover {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding-top: var(--spacing-lg);
+      }
+      #cover img {
+        border-radius: 4px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.06);
+      }
+    }
+
+    /* === 章节入口条 === */
+    .chapter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border-bottom: 1px solid var(--color-border-light);
+      position: sticky;
+      top: var(--nav-height);
+      z-index: 50;
+      background: var(--color-nav-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .chapter-bar a {
+      flex: 1;
+      max-width: 200px;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--color-text-light);
+      transition: color 0.25s, background 0.25s;
+      border-bottom: 2px solid transparent;
+    }
+
+    .chapter-bar a:hover { color: var(--color-text); background: rgba(0,0,0,0.02); }
+
+    .chapter-bar a span {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.03em;
+    }
+
+    .chapter-bar a small {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--color-text-lighter);
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 767px) {
+      .chapter-bar { gap: 0; }
+      .chapter-bar a { max-width: none; padding: 12px 8px; }
+      .chapter-bar a span { font-size: 0.82rem; }
+      .chapter-bar a small { font-size: 0.68rem; }
+    }
+
+    /* === 导航条 === */
+    #main-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--nav-height);
+      padding: 0 24px;
+      background: var(--color-nav-bg);
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
+      border-bottom: 1px solid var(--color-border-light);
+      font-size: 0.85rem;
+    }
+
+    .nav-title {
+      font-weight: 700;
+      cursor: default;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links { display: flex; gap: 22px; }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--color-text-light);
+      transition: color 0.25s;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+    }
+
+    .nav-links a:hover { color: var(--color-text); }
+    .nav-links a.active { color: var(--color-text); font-weight: 500; }
+
+    #mode-toggle {
+      padding: 5px 16px;
+      border: 1px solid var(--color-border);
+      border-radius: 2px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: var(--color-text-light);
+      transition: all 0.25s;
+      font-family: var(--font-sans);
+      letter-spacing: 0.04em;
+    }
+
+    #mode-toggle:hover { border-color: var(--color-text-light); }
+    #mode-toggle.demo-active {
+      background: var(--color-text);
+      color: var(--color-bg);
+      border-color: var(--color-text);
+    }
+
+    /* === 迷你目录 === */
+    #mini-toc {
+      position: fixed;
+      right: max(24px, calc((100vw - var(--max-width)) / 2 - 130px));
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+    }
+
+    #mini-toc ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+    #mini-toc a {
+      display: block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--color-border);
+      text-indent: -9999px;
+      overflow: hidden;
+      transition: background 0.35s, transform 0.35s, box-shadow 0.35s;
+    }
+
+    #mini-toc a:hover { background: var(--color-text-lighter); transform: scale(1.3); }
+
+    #mini-toc a.active {
+      background: var(--color-text);
+      transform: scale(1.5);
+      box-shadow: 0 0 0 3px rgba(44,36,22,0.08);
+    }
+
+    /* === 章节 === */
+    .chapter { padding-bottom: var(--spacing-xl); }
+
+    .chapter + .chapter { border-top: 1px solid var(--color-border-light); }
+
+    .chapter-header {
+      padding: var(--spacing-lg) 0 var(--spacing-md);
+      position: relative;
+    }
+
+    .chapter-image {
+      margin-bottom: var(--spacing-md);
+      border-radius: 3px;
+      overflow: hidden;
+      max-height: 280px;
+    }
+
+    .chapter-image img,
+    .chapter-image svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 280px;
+      object-fit: cover;
+    }
+
+    .chapter-image img {
+      filter: saturate(0.75) brightness(0.95);
+      transition: filter 0.6s ease;
+    }
+
+    .chapter-image img:hover {
+      filter: saturate(1) brightness(1);
+    }
+
+    .chapter-header h2 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+    }
+
+    .chapter-header h2 span {
+      font-size: 0.85rem !important;
+      font-weight: 400 !important;
+      color: var(--color-text-lighter) !important;
+      margin-left: 10px !important;
+      font-family: var(--font-sans) !important;
+      letter-spacing: 0.06em !important;
+    }
+
+    .keywords {
+      display: flex;
+      gap: var(--spacing-xs);
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .keyword {
+      font-size: 0.72rem;
+      padding: 3px 14px;
+      border-radius: 1px;
+      border: 1px solid var(--color-border);
+      opacity: 0.7;
+      letter-spacing: 0.05em;
+      font-weight: 400;
+    }
+
+    .pullquote {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      line-height: 1.75;
+      color: var(--color-text-light);
+      margin-top: 24px;
+      padding: 4px 0 4px 20px;
+      border-left: 2px solid currentColor;
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    /* === Q&A 树 === */
+    .qa-tree { margin-top: var(--spacing-md); }
+
+    .qa-item {
+      cursor: pointer;
+      padding: 15px 0;
+      transition: color 0.3s ease, opacity 0.3s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      position: relative;
+    }
+
+    .qa-item:hover { opacity: 0.7; }
+
+    /* 层级 0: 主问题 */
+    .qa-item.level-0 {
+      margin-top: 18px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--color-border-light);
+    }
+
+    .qa-item.level-0 .qa-marker {
+      flex-shrink: 0;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      margin-top: 7px;
+    }
+
+    /* 层级 1: 子问题 */
+    .qa-item.level-1 {
+      padding-left: 30px;
+      font-size: 0.98rem;
+      font-weight: 500;
+    }
+
+    .qa-item.level-1 .qa-marker {
+      flex-shrink: 0;
+      width: 14px; height: 2px;
+      margin-top: 10px;
+      border-radius: 1px;
+    }
+
+    /* 层级 2: 子子问题 */
+    .qa-item.level-2 {
+      padding-left: 52px;
+      font-size: 0.92rem;
+      font-weight: 400;
+    }
+
+    .qa-item.level-2 .qa-marker {
+      flex-shrink: 0;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      border: 1.5px solid;
+      margin-top: 8px;
+      background: transparent;
+    }
+
+    /* 层级 3 */
+    .qa-item.level-3 {
+      padding-left: 68px;
+      font-size: 0.87rem;
+      font-style: italic;
+      color: var(--color-text-light);
+    }
+
+    .qa-item.level-3 .qa-marker { display: none; }
+
+    /* 已读 */
+    .qa-item.read { color: var(--color-text-lighter); }
+    .qa-item.read .qa-marker { opacity: 0.35; }
+
+    /* 答案 */
+    .qa-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  padding 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  margin 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  background 0.5s ease;
+      padding: 0 20px;
+      margin-left: 20px;
+      font-size: 0.94rem;
+      line-height: 2;
+      background: transparent;
+      border-radius: 2px;
+      border-left: 2px solid transparent;
+    }
+
+    .qa-answer.open {
+      max-height: 6000px;
+      padding: 18px 20px;
+      margin: 6px 0 12px 20px;
+      background: var(--color-answer-bg);
+      border-left-color: var(--accent-color, var(--color-border));
+    }
+
+    .qa-answer p { margin: 0; }
+
+    /* === 底板背景 === */
+    html {
+      background: var(--color-bg);
+    }
+
+    html::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('image/底板.png') center/cover no-repeat;
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* === 尾声 === */
+    #ending {
+      padding: var(--spacing-xl) 20px;
+      text-align: center;
+      margin-top: 0;
+      position: relative;
+    }
+
+    #ending::before {
+      content: '\00B7 \00B7 \00B7';
+      display: block;
+      text-align: center;
+      font-size: 1.2rem;
+      letter-spacing: 0.6em;
+      color: var(--color-border);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    #ending h3 {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-lg);
+      color: var(--color-text-light);
+      letter-spacing: 0.04em;
+    }
+
+    .ending-quotes {
+      display: flex;
+      gap: var(--spacing-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .ending-quote {
+      flex: 1 1 200px;
+      max-width: 240px;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--color-text-light);
+      padding-top: 18px;
+      text-align: center;
+    }
+
+    .ending-quote .attr {
+      display: block;
+      margin-top: 14px;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-style: normal;
+      color: var(--color-text-lighter);
+      letter-spacing: 0.05em;
+    }
+
+    /* === 演示 banner === */
+    #demo-banner {
+      position: fixed;
+      top: var(--nav-height);
+      left: 0; right: 0;
+      text-align: center;
+      padding: 7px;
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      background: var(--color-text);
+      color: var(--color-bg);
+      z-index: 99;
+      animation: slideDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    #demo-banner[hidden] { display: none; }
+
+    /* === 阅读进度 === */
+    #progress-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: transparent;
+      z-index: 100;
+    }
+
+    #progress-fill {
+      height: 100%;
+      background: var(--color-text);
+      transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      width: 0%;
+      opacity: 0.25;
+    }
+
+    /* === 响应式 === */
+    @media (max-width: 767px) {
+      :root {
+        --spacing-xl: 48px;
+        --spacing-lg: 32px;
+        --spacing-md: 20px;
+      }
+
+      body { font-size: 15px; }
+
+      #mini-toc { display: none; }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: var(--nav-height);
+        left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: var(--color-nav-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--color-border-light);
+        padding: 6px 0;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      }
+
+      .nav-links.mobile-open { display: flex; }
+
+      .nav-links a {
+        padding: 12px 24px;
+        border-bottom: 1px solid var(--color-border-light);
+        font-size: 0.9rem;
+      }
+
+      .nav-title { cursor: pointer; }
+
+      .chapter-header h2 { font-size: 1.5rem; }
+      .chapter-image { max-height: 180px; border-radius: 2px; }
+
+      .pullquote { font-size: 1.1rem; padding-left: 16px; }
+
+      .qa-item.level-2 { padding-left: 28px; }
+      .qa-item.level-3 { padding-left: 38px; }
+
+      .qa-answer { margin-left: 8px; padding: 0 14px; }
+      .qa-answer.open { margin-left: 8px; padding: 14px; }
+
+      .qa-answer { transition: max-height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), padding 0.3s ease, margin 0.3s ease; }
+
+      .ending-quotes { flex-direction: column; align-items: center; gap: var(--spacing-md); }
+      .ending-quote { max-width: 100%; }
+    }
+
+    @media (min-width: 768px) {
+      main, header, footer {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 封面区 -->
+  <header id="cover">
+    <img src="image/封面.png" alt="三条毕业之路">
+  </header>
+
+  <!-- 章节入口条 -->
+  <nav class="chapter-bar">
+    <a href="#chapter-a"><span>毕业生A</span><small>考公 / 选调</small></a>
+    <a href="#chapter-b"><span>毕业生B</span><small>支教 + 转法学</small></a>
+    <a href="#chapter-c"><span>毕业生C</span><small>保研</small></a>
+  </nav>
+
+  <!-- 固定导航条 -->
+  <nav id="main-nav">
+    <span class="nav-title">三条毕业之路</span>
+    <span class="nav-links">
+      <a href="#cover">封面</a>
+      <a href="#chapter-a">毕业生A</a>
+      <a href="#chapter-b">毕业生B</a>
+      <a href="#chapter-c">毕业生C</a>
+      <a href="#ending">尾声</a>
+    </span>
+    <button id="mode-toggle" aria-label="切换演示模式">演示</button>
+  </nav>
+
+  <!-- 桌面端悬浮迷你目录 -->
+  <aside id="mini-toc" aria-label="章节导航">
+    <ul>
+      <li><a href="#cover" title="封面">封面</a></li>
+      <li><a href="#chapter-a" title="毕业生A">毕业生A</a></li>
+      <li><a href="#chapter-b" title="毕业生B">毕业生B</a></li>
+      <li><a href="#chapter-c" title="毕业生C">毕业生C</a></li>
+      <li><a href="#ending" title="尾声">尾声</a></li>
+    </ul>
+  </aside>
+
+  <!-- 主内容区 -->
+  <main id="content">
+    <section id="chapter-a" class="chapter" data-person="a" aria-label="毕业生A"></section>
+    <section id="chapter-b" class="chapter" data-person="b" aria-label="毕业生B"></section>
+    <section id="chapter-c" class="chapter" data-person="c" aria-label="毕业生C"></section>
+  </main>
+
+  <!-- 尾声区 -->
+  <footer id="ending">
+    <h3>如果给那时的自己一句话</h3>
+    <div class="ending-quotes">
+      <div class="ending-quote" style="border-top: 3px solid var(--color-accent-a);">
+        "还好你做到了，也希望你继续努力。"
+        <span class="attr">— 毕业生A</span>
+      </div>
+      <div class="ending-quote" style="border-top: 3px solid var(--color-accent-b);">
+        "加油，你的选择是对的。"
+        <span class="attr">— 毕业生B</span>
+      </div>
+      <div class="ending-quote" style="border-top: 3px solid var(--color-accent-c);">
+        "不要太焦虑或执着于一些尚未发生的事情，多去保持一个良好和健康的心态。"
+        <span class="attr">— 毕业生C</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 演示模式提示条 -->
+  <div id="demo-banner" hidden>演示模式 · 点击问题展开答案</div>
+
+  <!-- 阅读进度条 -->
+  <div id="progress-bar"><div id="progress-fill"></div></div>
+
+  <script>
+  /* ================================================================
+     访谈数据 — 毕业生A · 考公/选调
+     ================================================================ */
+  const chapterData = {
+    a: {
+      name: '毕业生A',
+      path: '考公 / 选调',
+      keywords: ['稳定', '深耕', '基层', '本科生优势'],
+      quote: '还好你做到了，也希望你继续努力。',
+      image: 'image/考公.png',
+      accent: 'var(--color-accent-a)',
+      questions: [
+        {
+          id: 'a-q1', level: 0,
+          question: '选择考选调是受了家里影响，还是自己一开始就想走这条路？',
+          answer: '选调生这条路呢，其实是对大学生非常友好的，尤其是我们学校的学生。走这条路，一个是家里面确实比较支持，可能性格也好或者其他方面也好，觉得你可以走这条路去试一下。再一个就是个人也觉得，我对以后的无论是说考研也好，或者是继续升学这种方面的兴趣不是很大，直接就业还是比较好的。我个人就是通过从小到大的经历也好，大学的学习也好，也是有一些理想在那的，所以我就走向了去考选调生这条道路。',
+          children: [
+            { id: 'a-q1-a', level: 1, question: '考上之后，身边的家人同学都是什么反应？',
+              answer: '其实考上选调这个事情，公务员这个行列也比较敏感，尤其是你考上了肯定不能说是我大肆宣扬。其实考上了家人还是很开心的，然后有相处比较好的同学我也会告诉他们，他们也会很开心。但是呢，其实很大一部分人是不知道的。因为我觉得其实考上了并不能代表你现在就特别特别厉害，你还有很长的路要走。', children: [] }
+          ]
+        },
+        {
+          id: 'a-q2', level: 0,
+          question: '在考研、去公司等出路之间，为什么选择了考公？',
+          answer: '就单就考研来说，其实我个人来说不太喜欢学习理论上的知识。我觉得通过我大学四年这样的学习，我更偏向于实践这方面——我不太喜欢去写文章，我更喜欢去动起来，去拍去剪去把自己的能力发挥出来，所以我不太考虑考研。再一个就是说我要毕业可以去进传媒公司啊各种互联网大厂，其实新传这个方面本科就业也还可以的。但是我觉得会有这个三十五岁的职业危机，对我个人还是比较喜欢这种比较平稳的。而且我喜欢就是长期从事一样的工作，就是我可以在这个领域一直就是深耕。而且一位老师说过一句话就是你在一个领域深耕十年，你就基本上可以成为这个领域的一个小专家了。所以我还是喜欢做像选调生、公务员这样的道路。',
+          children: [
+            { id: 'a-q2-a', level: 1,
+              question: '报考岗位时怎么取舍？除了现在的岗位还考虑了哪些？',
+              answer: '其实选择是非常重要的，尤其是在面临人生重大的转折点。你只能报一个岗位，而且你还不一定能考得上，你也不知道你的竞争对手是什么实力。单从省里的专额选调来说，其实高风险高回报，这是针对济南和青岛来说的。但是对于我来说，我很清楚自己的实力——我是一个本科生，我把这一点看得非常重要，因为很多研究生实力都是非常强的。所以我报的就是县本科的一个岗位，只有本科生可以报。再一个就是我没有选择济南和青岛的这样一些岗位，因为竞争实在是太激烈了。所以我最后选择就是回到自己的家乡，而且我家乡刚好有这样一个岗位。当时还有一个很有趣的故事——我们县的融媒体中心也招一个县本科的；然后市里的市委组织部也招一个县本科的。其实报家乡的县里那个比较稳的，但是我说也要拼一下——在更高的平台上你更容易实现自己的影响。所以我最后就报了一个市级的市委组织部。',
+              children: [
+                { id: 'a-q2-a-a', level: 2, question: '新闻传播专业考公，哪些单位比较有优势？',
+                  answer: '咱们新闻传播专业嘛，宣传部是一个比较热门的。跟咱竞争的差不多就是文学。说实话，新传在整个文科里面，除了那些纪检之类他们要法学的，其他的都可以跟他们掰掰手腕的——尤其是新传跟文学、艺术、外语这种的，新传还是有很大优势的。基本上所有的岗位，你只要不是纪检这种专业性比较强的岗位，你都可以去试一下。', children: [] },
+                { id: 'a-q2-a-b', level: 2,
+                  question: '心里会不会觉得省内第一高校的毕业生去四线城市工作，有些难以接受？',
+                  answer: '其实没有。说实话，首先我对自己的定位是本科生——能去到市级这种级别单位去工作的，基本上得研究生起步。所以能来到市级这种级别单位去工作，确实是我的荣幸，真的是我的荣幸。再一个，虽然日照说实话经济水平确实不怎么样，但是它是有很大的发展空间的。而且说实话沿海城市，总比我老家那个小地方要好点的。我对那个地方也比较熟悉。我对那个地方还是有情感的。', children: [] }
+              ]
+            },
+            { id: 'a-q2-b', level: 1,
+              question: '备考选调的情境是怎样的？',
+              answer: '你需要自己一个人好好努力。说实话，我们那一届有六个相处比较好的山东人，除了我之外，他们都有自己的保研也好、支教也好，他们都有自己的道路了，但是我没有任何着落。所以在这个时候，我选择报考选调生压力是很大的——如果我考不上，我觉得我比同龄的这一群好友要落下太多了。所以一定要好好努力。这种考试只有几个月的准备时间，一定要精力集中，把基本上所有能推的活都推掉。一定要注意锻炼身体。其实那段时间做的就是一直在电脑桌前一直坐着，听网课也好、做题也好，其实对自己整个身体造成的损伤也是不小的。备考是一个很消耗人的精力和身体健康状态的过程。',
+              children: [
+                { id: 'a-q2-b-a', level: 2, question: '考公和高考、考研在心态上最大的不同是什么？',
+                  answer: '我从网上看到一句话——高考你可以是第一名，考研你最好是第一名，但考公你必须是第一名。高考来说，恰逢我们那一届数学很难，所以很多人考完都崩溃了，但是我出来我觉得还好，因为我起码说是尽自己全力了。我出来分数以后，我自己可以有个大学上，无论是好坏，我起码有大学上，我以后有归属。但是考公不一样，考公你面对的是真的就是千军万马过独木桥。我这个岗位还好，只有将近二十个人报名，但是这二十个人全是精英——因为它限本科、限党员、限学生干部，真的都是很优秀的人，你把他们干掉真的很难。所以这个时候只有你自己努力。', children: [] },
+                { id: 'a-q2-b-b', level: 2, question: '有没有设想过如果没考上，下一步怎么安排？',
+                  answer: '考试嘛，我们不可能说我考这个一定能考上。除了报这个第一批选调，还有第二批，还有省考，还有国考，后面还有各地的事业编都行。我就算这个没考上，后面一个月以后我就去考第二批了。其实是不冲突不影响的，你就算一个没上，后面继续努力，总有一个有你的归属之地，不要放弃。', children: [] }
+              ]
+            },
+            { id: 'a-q2-c', level: 1,
+              question: '对公务员的薪资有了解吗？"稳定"是你选择的原因吗？会不会是"穷得很稳定"？',
+              answer: '公务员的工资，其实跟各个地市也好、省份也好，平均工资是很接近的。收入也稳定，支出也稳定。收入是你不用担心自己，只要你好好干，你不违纪违法的，真想为这份事业做出一番贡献，你不用担心被裁。然后支出呢，从福利待遇来说，你比如说以后你生病了，其实花不了多少钱，然后你吃饭都可以有食堂嘛，住宿也可能单位会提供。但是这个钱不会很多，真的，钱不会很多。但是人活着嘛，重要的是知足，不是说挣多少钱才是多。其实养活够自己，养活够家人，其实就够了。我也没有说什么大富大贵的，幸福最重要。', children: [] }
+          ]
+        },
+        {
+          id: 'a-q3', level: 0,
+          question: '基层工作会磨平人的心气，你觉得它会磨平你吗？',
+          answer: '我觉得基层工作嘛，其实我从小是在农村长大的，我非常非常熟悉基层是什么状况的。我也听父母或者爷爷奶奶跟我们讲的村里处理事情的很多有趣的事情。以后我在工作中，其实对这个基层工作是有心理准备的。可能就是老乡说："小王啊我这个鸡跑了，鸭跑了，找不到了怎么办呀？"真的，它会磨平你在没工作之前、在大学里面对于外面世界的美好畅想，其实是让你认清现实世界的一种过程。但是说实话，磨平我们的锐气——我觉得不是磨平我们的锐气，是把我们身上这种年轻或者稚嫩的气给去掉了。我们这个锐气其实要看个人。可能有的人进来他就是想要躺平也好，想安安稳稳度过自己一生。但是我觉得我们作为山大的学生，作为新闻传播学院的，我们要做人民的喉舌嘛。在以后的工作中我们也一样，不能因为困难太多我们就把自己往前走的劲、我们的锐气给磨平了，我们更要往前走。因为他们为什么会要磨平？因为他们过得不是很好，所以你要把这个劲用在怎么让他们过得好的上面。',
+          children: []
+        },
+        {
+          id: 'a-q4', level: 0,
+          question: '你怎么看待身边选择了保研、支教等不同道路的同学？',
+          answer: '每个人的选择都是遵从自己的内心。比如说我们很多同学保研或者考研，因为他从一开始学习就是要好好学习，把自己的成绩提得很高，然后每一科都认真对待，他保研也是理所应当的嘛。再说西部计划支教，咱们学院有很多这种——我觉得也是非常好的，因为他们从一开始就到各种社团，支教的社团，去到乡村去支教，他们也真正体验过这种支教的生活。再一个他们确实有这种想服务西部、想给那边小朋友带来一种希望或者带来一点帮助的心思，就是他们想去奉献自己。我觉得去西部真的要有很大的勇气。',
+          children: [
+            { id: 'a-q4-a', level: 1, question: '作为本科就上岸的选调生，你怎么看待"先读研再考公"的路径？',
+              answer: '这样其实是各有利弊的。我比较推荐你本科毕业的时候，无论你上没上研究生——就是无论你保研了还是考研考上了——你都去试一下，提前适应一下考试什么节奏。你就算考上了你不去也是可以的。先读完研究生再报考公务员，能走的路是很多的——因为很多岗位只有研究生能报，而且研究生这三年的成长会很多。本科来说的话，可能你进去的优势就是年龄，你有更长的时间去积淀自己。但是说实话，以后如果想发展得更好，本科直接进入公务员行列，以后还是要在学术上或者在研究生之类的进行进一步的提高。', children: [] }
+          ]
+        },
+        {
+          id: 'a-q5', level: 0,
+          question: '你对未来最不确定的一点是什么？',
+          answer: '其实现在还真不清楚以后工作是怎么样什么样子。因为家里可能有亲戚朋友是公务员，但是没有人会问他们你到底工作是怎么样的，你只能听网上说。而且现在说实话网络上这种氛围，它不一定都是真的，很多时候网上所反映出来的就是那些不好的方面。对以后工作具体做什么还不清楚，因为现在还没给我分到具体到哪一个科室。',
+          children: [
+            { id: 'a-q5-a', level: 1, question: '给考公之前的自己说一句话',
+              answer: '还好你做到了，也希望你继续努力。', children: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ================================================================
+       访谈数据 — 毕业生B · 支教+转法学
+       ================================================================ */
+    b: {
+      name: '毕业生B',
+      path: '支教 + 转法学',
+      keywords: ['奉献', '开拓者', '志愿服务', '跨专业'],
+      quote: '加油，你的选择是对的。',
+      image: 'image/支教.png',
+      accent: 'var(--color-accent-b)',
+      questions: [
+        {
+          id: 'b-q1', level: 0,
+          question: '支教的地方了解了吗？当地的生活环境、教育条件怎么样？',
+          answer: '我要去的这个地方在新疆南部。这个县它其实不算一个很穷的县，因为首先它所在的地区是整个新疆人口最多的，而且这个县又是离市区最近的一个县，所以说这个位置我觉得其实挺好的，人口交通其实都很便利。而且呢我了解到我们未来最有可能去的一个学校就在县城里边的，我感觉其实也很便利。但是在我选择之前，因为当时这个支教地是今年第一年开辟，之前没有人去过，然后在一开始填志愿的时候也一直没有人填。然后我就想着，反正都参加研究生支教团了，也做好吃苦的准备了，不管他啥样的去就去吧。反正第一年嘛，第一年去开辟一下，就是当这个第一人嘛——拓荒者，做第一批去的人，我觉得也是一件很光荣的事。我就去了，我也做好了吃苦的准备。但是后来没想到这个条件还是不错的。',
+          children: [
+            { id: 'b-q1-a', level: 1, question: '条件不错的话，为什么还需要支教团去？',
+              answer: '毕竟是少数民族地区嘛，那边整体的教育资源肯定还是不如东部地区的。你像整个全国的研究生支教团计划，在西部在逐渐地增加支教点位，在中部在保持支教点位，甚至在减少支教点位；但是在东部的话就完全没有支教点位了。所以说东部的整个教育资源配置肯定是要优于西部地区的，所以说还是需要我们的帮助。', children: [] },
+            { id: 'b-q1-b', level: 1, question: '一年时间能给当地的同学带来多大的改变？',
+              answer: '我们有一句话叫做"十年树木，百年树人"。对于改变一个地方的教育环境来说，可能需要好几代人很长时间的努力。但一般来讲，一个学生可能去一年就回来了。改变一批学生可能需要很多代人长时间的努力，我觉得这正是意义所在——我们正是一代一代中的其中的一代。这一年虽然很短，但是我觉得有一个现实情况——如果我们能够在他们的很多实习老师中做比较优秀的那一批，我觉得我们就起到了我们应有的作用。这一年我们也不寄望于我们的努力能给他们带来很大程度上的改变或者成绩上的飞速提升。我觉得只能是尽我们的努力，把这一年所有的工作、所有的教学工作耐心地细心地做好，认真对待每一个学生，做好自己的本职工作。我们也可以直接把东部地区的一些多姿多彩的活动直接带过去，让那边的孩子在这一年内长时间地体验一下东部地区孩子们能享受到的教育资源和教学方法。所以个体的一年是有限的，但会有一代一代的人持续不断地去，这样的话时间可能就是无限的。', children: [] }
+          ]
+        },
+        {
+          id: 'b-q2', level: 0,
+          question: '你是什么时候决定去支教的？在此之前做了哪些努力？',
+          answer: '首先是客观因素。客观因素就是我的成绩没有很好。主观因素就是我参加过两段支教——去了一个外来务工人口比较多的社区，那边的孩子非常需要人去教他们学习。当时是在一个寒假，短短的两周就给我带来了很大程度上的身心的放松——能在大学这个环境里面脱离出来。我去那里跟孩子打交道，就感觉自己来到了一片乐土，感觉自己还是挺喜欢和孩子相处的。然后第二点是志愿服务。我在大一开始就参加了志愿服务组织，用自己的声音去转译电影，让视障群体能够听见电影，能够更好地理解电影表达的意思。在活动结束的时候，我看见很多视障人士都流下了眼泪，这也是对我的肯定。所以说我在志愿服务中是得到了很大的满足感和收获的，我觉得这是我想选择这一条道路的两个原因。',
+          children: [
+            { id: 'b-q2-a', level: 1, question: '为什么觉得教书育人是快乐的事？不会觉得面对不成熟的小孩很麻烦吗？',
+              answer: '我有预想的这种情况，我觉得麻烦是肯定的，我到时候肯定也会觉得很麻烦。现在我这样幸福的原因是我还没有各种真正压到教师这个身份上的各种指标、统计这些烦恼。然后我觉得最重要的还是要保持一颗热情热爱的心吧，因为教育毕竟是个良心活，对孩子你还是要付出自己的全部。因为就是一年的时间，我肯定想把我所能教的、我学到的所有东西都交给他们，我觉得我不能辜负自己这一年的青春，不能让自己这一年青春白白浪费在这里。', children: [] },
+            { id: 'b-q2-b', level: 1, question: '具体做了哪些准备和努力？',
+              answer: '首先学生工作是我这几年一直在干的，我觉得也是一个自然而然能够达到的条件。因为入选研究生支教团有几个条件：一个是党员，一个是志愿服务和社会实践方面有突出经历或突出贡献。我觉得首先我过了教资，其次我志愿服务做得不错，社会实践也还可以，成绩也满足条件，也经历了一些在学生工作方面的磨练。然后就是在笔试和面试时间到了之前那一年，我自己整理了关于这个笔试的所有能够涵盖所有方面的参考资料。那个资料我做成一个PDF，有198页。笔试我感觉是非常顺畅非常流利地打完了一整张试卷。面试的话，当时我其实是有点蒙的，面试我觉得发挥的不算好。但是可能还是有自身的经历啊，还有笔试可能都挺好的，然后还是入选了。', children: [] }
+          ]
+        },
+        {
+          id: 'b-q3', level: 0,
+          question: '转法律的决定是先有的，还是因为支教保研这个项目才有的？',
+          answer: '是在我决定选择研支团这条路之后才有的。因为确实入选研支团之后你要先去支教一年。我本身在我们年级也算是大的。然后可能觉得自己要延一年毕业。如果我能够用这一年时间获取一些……首先是有前人探路，有一个学长就是保研到了法学院，也是通过支教保研途径。这算是给我一个思路吧。我感觉如果多上一年学的话，能够就是比我继续读新闻学的研究生能够获得一些优势。就比如我可以在考公方面可以选择更多的岗位，然后在企业方面我可以因为有双学科的背景可以去做营销、传播，也可以去做法务。甚至我想到可能未来法学的背景可以帮助我考一些中央媒体的法律记者。',
+          children: [
+            { id: 'b-q3-a', level: 1, question: '法硕（非法学）在就业市场会不会像"庶出"一样受歧视？',
+              answer: '我感觉会有，多少会有肯定的。其实我也做过一些了解，就是比如在省里的专额选调中，它的一些法学的岗位、法律的岗位，比如人民法院，它是可以让法律硕士来报名的。然后相比之下到了国考和省考，这些限制条件就更严了，它就要求必须是法学硕士，而且要本科是法学。所以我觉得越珍贵的机会可能限制越少，所以未来要把握那些珍贵的机会。', children: [] },
+            { id: 'b-q3-b', level: 1, question: '法考+毕业论文+找工作集中在研三，你怎么应对？',
+              answer: '我觉得我看得很开。首先像法学本科，如果他们不去读研究生的话，而且他们没有保上研的话，他们也是大四要法考、要考研、要写毕业论文。我觉得这是很多人都共同面对的一类问题。到了研究生阶段，我感觉到那个时候必须得逼自己一把，看看自己到底有多少的潜力。我也不想成为一个面对眼前的困难就不敢往前走的人。我是比较有信心去克服这一点的。就算退一万步，法考没过，后面还有。所以我觉得路很多，机会也很多，不必太焦虑，走一步看一步。', children: [] }
+          ]
+        },
+        {
+          id: 'b-q4', level: 0,
+          question: '你怎么看待身边选择了考公、保研等不同道路的同学？',
+          answer: '我感觉可能还是认同感不同。我感觉我这一条路可能对我自己来说更有意义，因为我看到了教育、孩子们，和他们相处我感觉非常快乐。我感觉通过西部计划这样一条路，能够在这一年里——一年不长，一年对于整个人生来说太短了——我感觉完全可以用一年去实现自己的意义。然后这一年时间我感觉对我今后的人生可能会有更大的帮助。然后其他同学的路我也非常支持。我也想过，偶尔想过自己这条路会不会太笨了，这就是一条中庸之路——你可以来也可以选择不来，如果你想来付出努力一定能来。但是在现实生活中，在不断经历的这些——比如去附中实习那一个月，还有社会上的各种鼓励——我感觉这都极大地反复地鼓舞了我更加坚定地去西部、去祖国需要的地方这条路的决心。',
+          children: [
+            { id: 'b-q4-a', level: 1, question: '当了研支团团长后，对"奉献集体对自己没好处"这个问题有新的答案吗？',
+              answer: '首先我一开始确实没有打算当这个团长。当然他的优势是显而易见的——可以在未来找工作时比较加分。其实当时选择竞选完全是因为想要选的那个人能力不够，不放心把集体托付给他。我感觉如果这样一个正能量的集体在一个不那么放心的人的带领下……所以我觉得还是要从我对学生工作的认同感谈起。其实我感觉学生阶段的大部分工作或者说职责，归根结底还是职责。我们的成长很快，但是能力的成长很少，因为毕竟工作时间太短，还没有形成一套自己可复制的、可推广的工作经验。所以我觉得归根结底，这些干部的职位都是职责。我也是一直对自己说，要永远做一名初学者，做一名服务者。到了研究生支教团里，我还是秉持着这样一种观念——大家虽然都是学生干部，但是总有一个人要站出来服务这群干部。大家其实过四年一步步干上来都很累。我觉得我愿意去做这个人，这也算是我去西部进行志愿服务、进行奉献的一种观念的体现吧。', children: [] },
+            { id: 'b-q4-b', level: 1, question: '你对未来最不确定的一点是什么？',
+              answer: '未来不确定？我看这个问题我就没想出来……我觉得未来最不确定的，可能是我到了支教地之后，能否顺利地、或者说能否把这群孩子教好，能否成为一名合格的老师。这个"合格"这个词我感觉在我心里还挺重的。我不强求自己成为一名特别优秀的老师，但我不想对不起我这一年在那里待着，这一年时光。', children: [] }
+          ]
+        },
+        {
+          id: 'b-q5', level: 0,
+          question: '给做出支教这个选择之前的自己说一句话',
+          answer: '加油，你的选择是对的。', children: []
+        }
+      ]
+    },
+
+    /* ================================================================
+       访谈数据 — 毕业生C · 保研
+       ================================================================ */
+    c: {
+      name: '毕业生C',
+      path: '保研',
+      keywords: ['习惯性优秀', '综测竞争', '理想主义', '不确定性'],
+      quote: '不要太焦虑或执着于一些尚未发生的事情，多去保持一个良好和健康的心态。',
+      image: 'image/保研.png',
+      accent: 'var(--color-accent-c)',
+      questions: [
+        {
+          id: 'c-q1', level: 0,
+          question: '保研是进入大学就设定的目标，还是某次考试后发现可以保研？',
+          answer: '这个其实是这样——是我在上大一的时候，当时其实闹了一些小不愉快跟同学们，然后当时心里比较封闭，就别的事情没得干就只能学习。大一也没什么技术含量，稍微卷了卷，卷到了当时第一。不过如此。所以理论上来说，我看到很多那种机构会说，你入学之前就必须要设定这样一个目标，然后你大一要怎么样、大二要怎么样。但我不是这个样子的。其实更多的，我觉得这和我个人的特点有关系——我从小到大其实一直都是学习比较好的那种，在我的感觉里面，保持一定的学习状态、保持一定的名次，可能是一种习惯。而且这也和我的个人性格有关——可能很多东西我不是在跟别人比。有的时候我会觉得，一篇论文它要求三千字，但是我三千字写完了，我觉得我想表达的东西、我想阐述的东西没有完全写明白，所以我可能会多写一点。有人就会觉得就是卷，但是我觉得我没有在卷，我只是对这东西有自己的想法，我想把它表达清楚。保研这个东西其实也是水到渠成的——你三年都这么过来的，最后你得到了这样一个结果，我觉得可以是算做一个成果，或者说是给你的奖赏。',
+          children: [
+            { id: 'c-q1-a', level: 1, question: '为保研做了哪些努力？回头看有什么可优化的？',
+              answer: '我虽然觉得保研不是我的目标，但是我处在这样的一个分数段里面，处在可以保研那个梯队里面，你就天然地觉得我要保持在这个梯队里面，保证自己不掉出去。为了这个目标呢其实也做了非常多的努力。比如像我们那一级开始，就加综测了。我们是第一年搞这个东西，谁也不知道他到底是什么情况，到底他占比多少。所以当时其实所有人都处于一种恐慌的状态——我甚至不能用焦虑来说这个事情，更是一种恐慌。这场战争已经开始从单纯的课上那几个回答、课下那个论文，变成了全方位、多层次、宽领域的竞争。然后你就为了不甘于人后，不得不去跟他们一起做一些比如艺术类的活动、竞赛。虽然在做的过程中很快乐，但是有些东西其实是你可以舍弃掉的，去更多地寻求一种自己心情的安定和安宁。因为这个忙碌，它是一种没有目的的忙碌——你不知道你在为了什么，你的目的感很弱。有的时候更多的是你在被其他人推着走，而不是你自己想要去做这个事。然后有的时候你做完这么多东西，你就静下来，坐了想了半天——我到底做了一些什么东西呢？好像自己在里面没有收到什么特别多的收获。我觉得这其实就不能说是一种遗憾，我只能说它是一种弊端——它是我为了达到保研的这样一个结果而做出的努力所带来的负面影响。', children: [] },
+            { id: 'c-q1-b', level: 1, question: '保研名额按前五学期绩点还是前六学期综测？夏令营和预推免看的东西不一样？',
+              answer: '这个其实是一个系统运行上的时间先后倒置。你看夏令营是在大三的暑假，这个时候有可能你投递夏令营的期间，你的第六学期成绩没有完全统计出来，它就不能作为你投递的时候用的成绩，所以你投递的时候只能用前五学期的成绩，这是夏令营。然后综测呢，第六学期的成绩是在大四上学期开始前一两周它会出来结果。然后这个时候甚至有可能你的第六学期成绩还没有出来。然后综测就更靠后了——你得看学院的速度。所以最后这个综测它唯一的意义就是决定你有没有保研名额，因为它对你投递可能影响不大。投递更多看的是你的成绩排名。也就是会产生一种极端的情况——我报了这个预推免，我通过了，我获得了这个学校的录取，但是我没有保研名额，因为我的综合评价成绩不在那个线里面。', children: [] }
+          ]
+        },
+        {
+          id: 'c-q2', level: 0,
+          question: '拿到推免资格前，对读研有什么具体想象？',
+          answer: '其实说实话没有什么想象。大一的时候还是在适应时期；大二呢就是适应好了，模模糊糊地想要做出一些自己的贡献；大三就是快面临保研这个事情了，也得开始去想象未来的路该怎么走。这个时候因为我对和研究生的交流不是特别多，直到我的学姐他们去读研的时候，差不多就是我保研左右或者保研之后了，才会明白好像研究生不是我想象中那种东西。因为你看你跟导师什么样子——如果导师是比较年轻的，他就迫切想要你发刊，让你天天给他写这个写那个；如果他是很成功的那种教授，他可能就对你不管不顾。在这个情况，它其实不是那种我们想到的"研究生就是走过场，更多是拿学历"。但其实还是要做很多很多工作的，和我的想象还是有点出入。', children: []
+        },
+        {
+          id: 'c-q3', level: 0,
+          question: '拿到其他学校offer后，为什么选择留在本校？',
+          answer: '这个其实算作是一个遗憾。当时是投递了很多学校，因为夏令营没有开，所以大家都看着预推免。但是当时文件下得比较晚，导致预推免都挤在了同一个时间段内。你完全做不到今天坐飞机去那个城市面试完之后再坐飞机来这个城市。所以当时就做这个取舍，就相当于是为了防止你一个人拿了四五个offer然后自己在那儿选，导致很多人一个offer没有——他就会让你提前选，在面试之前就让你选你到底要去哪个地方。你如果选了一个你入了营但是你不保准能够拿到offer的学校，而且你现在一个offer也没有，你就很有可能面临没有学上的情况。当时我在夏令营的时候面试了一个学校。然后在这死亡五天之前，去另一个学校面试了一下，但是一直没有出结果。在我做决定之前他也没出结果。如果说在我做决定之前已经出了结果，我有一个保准的offer的话，我可能会有更多的底气去冲我想去的学校。但是那时候没有底。所以当时是做了很多很多的权衡取舍，当然也哭了很长时间——为了这个东西也后悔了很长时间，做了一些很激烈的心理斗争。最后心安理得地接受了我留在这里的这样一个情况。', children: []
+        },
+        {
+          id: 'c-q4', level: 0,
+          question: '学硕和专硕有什么区别，各有什么优劣？',
+          answer: '我认为我们国家对于专硕和学硕的划分其实很不明显——很多学校对他们俩的划分很模糊。甚至于到我们这些学生来说，更多就变成了一个"学硕便宜、专硕贵"，就只能有这样的一个很浅显的认知。但是理论上来说，分开一点更好——专硕就让他提前接触这个行业的前沿，因为理科和工科实用性比较强，跟企业、市场越早对接就越可能产生越大的效用。但是你要做学术的话，肯定是学界这条脉络，它有时候和市场的脉络不太一样。但是培养起来，我没有认为他们两个有什么归根结底的区别。而且作为学生来讲，我们报学硕、专硕唯一可能考虑的就是我要毕业，而且我报研究生可能归根结底我就只是要这个文凭——要这个文凭来为我将来的职业打开更多选择的可能性。至于学硕和专硕，他们根本就不在乎。当然这也跟方向有关——如果你确实要做学术，铁了心就是要在学术道路上钻研，那就去读学硕。如果说我就是要文凭，那还不如去读一年制，反正都是硕士回来。', children: []
+        },
+        {
+          id: 'c-q5', level: 0,
+          question: '读研的目的是什么？读研之后想干什么？',
+          answer: '浪漫的理想主义大家都得有，是不是？至少人活着得有一个理想、一个目标。每个人的理想都会不一样——可能有些人的理想就是比较小的，我要过上一个比较舒适比较舒服的生活；有的人理想就可能比较大。我这个指向你可以说它更多的是一种想法，一种我觉得可以从一些社会现实里面抽离出来的一种能够引领自己前进的精神力量吧。就是你至少人得有个奔头。我听了一个老师讲的——人生的意义是一个非常重要的命题。有些人会认为人生的意义就是体验——我会去不同的地方旅游，我会体验不同种的生活。但是那个老师又讲到，他之后遇到了一个和他一样的大学同学。那个大学同学直接去乡村做驻村干部，然后他们聊起来，他同学非常兴高采烈地给他指："你看这是我来到我们村之前的样子，我来到我们村之后，我们村通了水泥路，我们村建起来了活动广场。"然后当时那个老师就在想：或许人生的意义不止是体验，它还可以是一种另外的形式。他之所以要做那么多，归根结底并不是想要自己体验什么，而是在为别人做事的过程中体会到了自己的成就感，体会到了自己的价值和存在。所以我为什么当时想写这个——我在那篇记里面我最后写，我写到这个地方的时候我在想，人类社会一方面发明了生成式人工智能，另一方面我们又在生物学上发生了巨大的突破。这么大的突破，但是还是会有战争，还是有那些流离失所的难民们。人类为什么是如此割裂的两个群体？好像是一个极端——科技发展的极端；另一个是困难的极端。我觉得不应该是这样子的。所以最后想写就是：学校教会了我什么？教会了我就是"学无止境，气有浩然"。另一个就是"为天下储人才，为国家图富强"。中国的古话讲"穷则独善其身，达则兼济天下"——当你生活富足之后，你就会在想为什么会有那么多人他不能和我一样富足。所以才会有了那种做出贡献、为人民服务那种很朴素的想法。我读研的目的可能没有我说的这么高大上，我的目的可能就是为了找到一份工作。但我觉得找到一份工作之后，我可能会在想：我有没有一些能够做出一点点改变的一些举动和想法？', children: []
+        },
+        {
+          id: 'c-q6', level: 0,
+          question: '怎么看待身边选了考研、考公、支教等不同道路的同学？会美化没走过的路吗？',
+          answer: '我觉得选择是每个人自己做出的选择。然后这些选择有可能不是他自己心里想要的那个选择，更多的有可能是时代塑造的、或者他家庭里塑造的、或者是整个社会塑造的这样一个选择——是有些东西在推着他往前走。很多人可能就像我一样——我为什么要保研？我跟你说我保研的原因是：我处在这样的一个梯队里面，我在这个位置里面，我觉得我天然地觉得我就得保研。因为我在这个梯队里面如果我不保研，我相当于浪费了我在这个梯队里面所做出的努力。至于别人的选择，我当然不能过多地去指摘或者是去赞美他们所谓做出的选择。我只能说每个人都有自己要走的长征的道路，每个人都会遇见各自的问题。每一个选择它都有它的正面和反面，我们不能去说你去了某个学校或者你去了某个岗位它就一定是好的。我赚到了一百万和我赚到一千块钱，他所面临的形式的影响和获得的幸福感，你是完全无法理解的。就像濠梁之辩——"子非鱼，安知鱼之乐"？我不是你，我不能对你进行感同身受。我只能对他们的选择表示尊重和支持，以及对他们的选择抱有一种期许——就是希望他们做出的选择能够不让现在的他们后悔。', children: []
+        },
+        {
+          id: 'c-q7', level: 0,
+          question: '你对未来最不确定的一点是什么？',
+          answer: '不确定……其实不确定的东西有很多。就是只要想到不确定，你就会发现有特别特别多奇奇怪怪的不确定等着你。就像我在那个优秀毕业生的访谈录里面我也写，我说人生不是去麦田里面捡西瓜和芝麻那个小孩——不是你丢掉了西瓜你就只能捡到一个芝麻。而是人生是千千万万个各不相同的芝麻等着你去捡，你只需要去从里面选择其中一个。捡到这一个又会有其他的千千万万个小的芝麻去等你。所以每一个选择未来都是不确定的。我对这样的想法以及我做的行动就是——我不去想不确定，我想的就是现在我要干什么。我制定一些比较短期的目标：我这段时间我就要保研，我这段时间我就要写论文。然后每一天这么过去，你会发现将来那些很多很多——你现在一想就特别特别不确定的事情——它就突然变成了你过去的时候，可能就是这一小段时间、这一天这一周做出了一个很小的决定，就决定了未来那些你一想就焦虑得不行的很大的事情。我看网上说这样的想法叫做"保持正念"，就有一个特别冠冕堂皇的词，但是我不想就这么用它。就是你关注的更多是当下和自己，而不是未来和不确定。', children: []
+        },
+        {
+          id: 'c-q8', level: 0,
+          question: '给保研之前的自己说一句话',
+          answer: '不要太焦虑或执着于一些尚未发生的事情，多去保持一个良好和健康的心态。然后选择是一定要做的，而且一定要快。而且做出这个选择之后一定要坚持下去，多想想之前自己为什么做这样的选择——为什么选择保研，为什么选择去继续努力，为什么要和他们竞争。一定要想明白这个"为什么"。如果想不明白，我觉得我可能就会迷失在很多很多琐碎点滴的日常里面，进而就变成了一个没有感知力的、人形的机器人。我觉得这是最重要的。', children: []
+        }
+      ]
+    }
+  };
+
+  /* ================================================================
+     Q&A 渲染引擎
+     ================================================================ */
+  function renderQATree(container, personData) {
+    const tree = document.createElement('div');
+    tree.className = 'qa-tree';
+    tree.style.setProperty('--accent-color', personData.accent);
+
+    function renderNode(node) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'qa-node';
+
+      const questionEl = document.createElement('div');
+      questionEl.className = `qa-item level-${node.level}`;
+      questionEl.dataset.id = node.id;
+
+      const marker = document.createElement('span');
+      marker.className = 'qa-marker';
+      marker.style.background = personData.accent;
+      marker.style.borderColor = personData.accent;
+      questionEl.appendChild(marker);
+
+      const text = document.createElement('span');
+      text.textContent = node.question;
+      questionEl.appendChild(text);
+
+      const answerEl = document.createElement('div');
+      answerEl.className = 'qa-answer';
+      answerEl.id = `answer-${node.id}`;
+      if (node.answer) {
+        answerEl.innerHTML = `<p>${node.answer}</p>`;
+      }
+
+      questionEl.addEventListener('click', () => {
+        answerEl.classList.toggle('open');
+        if (answerEl.classList.contains('open')) {
+          questionEl.classList.add('read');
+        }
+        updateProgress();
+        saveState();
+      });
+
+      wrapper.appendChild(questionEl);
+      if (node.answer) {
+        wrapper.appendChild(answerEl);
+      }
+
+      if (node.children && node.children.length > 0) {
+        node.children.forEach(child => {
+          wrapper.appendChild(renderNode(child));
+        });
+      }
+
+      return wrapper;
+    }
+
+    personData.questions.forEach(q => {
+      tree.appendChild(renderNode(q));
+    });
+
+    container.appendChild(tree);
+  }
+
+  function renderChapter(personKey) {
+    const data = chapterData[personKey];
+    const section = document.getElementById(`chapter-${personKey}`);
+    if (!section) return;
+
+    section.innerHTML = '';
+    section.style.setProperty('--accent-color', data.accent);
+
+    const header = document.createElement('div');
+    header.className = 'chapter-header';
+    header.innerHTML = `
+      ${data.image ? `<div class="chapter-image">${data.image.trim().startsWith('<svg') ? data.image : `<img src="${data.image}" alt="" aria-hidden="true" loading="lazy">`}</div>` : ''}
+      <h2 id="chapter-${personKey}-heading">${data.name}<span style="font-size:0.95rem;font-weight:400;color:var(--color-text-light);margin-left:12px;">${data.path}</span></h2>
+      <div class="keywords">${data.keywords.map(k => `<span class="keyword">${k}</span>`).join('')}</div>
+      <blockquote class="pullquote" style="color:${data.accent}">${data.quote}</blockquote>
+    `;
+    section.appendChild(header);
+
+    renderQATree(section, data);
+  }
+
+  renderChapter('a');
+  renderChapter('b');
+  renderChapter('c');
+
+  /* ================================================================
+     导航系统
+     ================================================================ */
+  const tocLinks = document.querySelectorAll('#mini-toc a');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        tocLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+        navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px' });
+
+  document.querySelectorAll('.chapter, #cover, #ending').forEach(el => observer.observe(el));
+
+  // 手机端导航下拉
+  const navTitle = document.querySelector('.nav-title');
+  const navLinksContainer = document.querySelector('.nav-links');
+
+  navTitle.addEventListener('click', () => {
+    if (window.innerWidth < 768) {
+      navLinksContainer.classList.toggle('mobile-open');
+    }
+  });
+
+  navLinksContainer.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinksContainer.classList.remove('mobile-open');
+    });
+  });
+
+  /* ================================================================
+     演示模式
+     ================================================================ */
+  const modeToggle = document.getElementById('mode-toggle');
+  const demoBanner = document.getElementById('demo-banner');
+  let isDemoMode = false;
+
+  modeToggle.addEventListener('click', () => {
+    isDemoMode = !isDemoMode;
+    modeToggle.textContent = isDemoMode ? '阅读' : '演示';
+    modeToggle.classList.toggle('demo-active', isDemoMode);
+
+    if (isDemoMode) {
+      demoBanner.hidden = false;
+      document.querySelectorAll('.qa-answer.open').forEach(el => el.classList.remove('open'));
+      updateProgress();
+      saveState();
+    } else {
+      demoBanner.hidden = true;
+      restoreState();
+    }
+  });
+
+  /* ================================================================
+     阅读进度 + localStorage
+     ================================================================ */
+  function updateProgress() {
+    const allAnswers = document.querySelectorAll('.qa-answer');
+    const total = allAnswers.length;
+    const opened = document.querySelectorAll('.qa-answer.open').length;
+    const fill = document.getElementById('progress-fill');
+    if (fill) {
+      fill.style.width = total > 0 ? `${(opened / total) * 100}%` : '0%';
+    }
+  }
+
+  function saveState() {
+    const openIds = [...document.querySelectorAll('.qa-answer.open')].map(el => el.id);
+    localStorage.setItem('interview-open-answers', JSON.stringify(openIds));
+  }
+
+  function restoreState() {
+    if (isDemoMode) return;
+    const saved = JSON.parse(localStorage.getItem('interview-open-answers') || '[]');
+    saved.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('open');
+        const questionEl = el.previousElementSibling;
+        if (questionEl && questionEl.classList.contains('qa-item')) {
+          questionEl.classList.add('read');
+        }
+      }
+    });
+    updateProgress();
+  }
+
+  restoreState();
+  </script>
+</body>
+</html>
