@@ -36,14 +36,28 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      background: url('image/bg.png') top center/100% auto no-repeat;
+      filter: contrast(1.4) brightness(0.92);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #cover, .chapter-bar, main, #ending, footer, #progress-bar {
+      position: relative;
+      z-index: 1;
+    }
+
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: var(--nav-height);
     }
 
     body {
       font-family: var(--font-sans);
-      background: var(--color-bg);
+      background-color: var(--color-bg);
       color: var(--color-text);
       line-height: 1.85;
       -webkit-font-smoothing: antialiased;
@@ -83,12 +97,6 @@
       justify-content: center;
       gap: 0;
       border-bottom: 1px solid var(--color-border-light);
-      position: sticky;
-      top: var(--nav-height);
-      z-index: 50;
-      background: var(--color-nav-bg);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
     }
 
     .chapter-bar a {
@@ -124,93 +132,6 @@
       .chapter-bar a { max-width: none; padding: 12px 8px; }
       .chapter-bar a span { font-size: 0.82rem; }
       .chapter-bar a small { font-size: 0.68rem; }
-    }
-
-    /* === 导航条 === */
-    #main-nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: var(--nav-height);
-      padding: 0 24px;
-      background: var(--color-nav-bg);
-      backdrop-filter: blur(16px) saturate(1.4);
-      -webkit-backdrop-filter: blur(16px) saturate(1.4);
-      border-bottom: 1px solid var(--color-border-light);
-      font-size: 0.85rem;
-    }
-
-    .nav-title {
-      font-weight: 700;
-      cursor: default;
-      font-family: var(--font-serif);
-      font-size: 0.95rem;
-      letter-spacing: 0.04em;
-    }
-
-    .nav-links { display: flex; gap: 22px; }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--color-text-light);
-      transition: color 0.25s;
-      font-size: 0.82rem;
-      letter-spacing: 0.03em;
-    }
-
-    .nav-links a:hover { color: var(--color-text); }
-    .nav-links a.active { color: var(--color-text); font-weight: 500; }
-
-    #mode-toggle {
-      padding: 5px 16px;
-      border: 1px solid var(--color-border);
-      border-radius: 2px;
-      background: transparent;
-      cursor: pointer;
-      font-size: 0.78rem;
-      color: var(--color-text-light);
-      transition: all 0.25s;
-      font-family: var(--font-sans);
-      letter-spacing: 0.04em;
-    }
-
-    #mode-toggle:hover { border-color: var(--color-text-light); }
-    #mode-toggle.demo-active {
-      background: var(--color-text);
-      color: var(--color-bg);
-      border-color: var(--color-text);
-    }
-
-    /* === 迷你目录 === */
-    #mini-toc {
-      position: fixed;
-      right: max(24px, calc((100vw - var(--max-width)) / 2 - 130px));
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 90;
-    }
-
-    #mini-toc ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-
-    #mini-toc a {
-      display: block;
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--color-border);
-      text-indent: -9999px;
-      overflow: hidden;
-      transition: background 0.35s, transform 0.35s, box-shadow 0.35s;
-    }
-
-    #mini-toc a:hover { background: var(--color-text-lighter); transform: scale(1.3); }
-
-    #mini-toc a.active {
-      background: var(--color-text);
-      transform: scale(1.5);
-      box-shadow: 0 0 0 3px rgba(44,36,22,0.08);
     }
 
     /* === 章节 === */
@@ -399,26 +320,6 @@
 
     .qa-answer p { margin: 0; }
 
-    /* === 底板背景 === */
-    html {
-      background: var(--color-bg);
-    }
-
-    html::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: url('image/底板.png') center/cover no-repeat;
-      opacity: 0.06;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body {
-      position: relative;
-      z-index: 1;
-    }
-
     /* === 尾声 === */
     #ending {
       padding: var(--spacing-xl) 20px;
@@ -474,28 +375,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* === 演示 banner === */
-    #demo-banner {
-      position: fixed;
-      top: var(--nav-height);
-      left: 0; right: 0;
-      text-align: center;
-      padding: 7px;
-      font-size: 0.78rem;
-      letter-spacing: 0.05em;
-      background: var(--color-text);
-      color: var(--color-bg);
-      z-index: 99;
-      animation: slideDown 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    @keyframes slideDown {
-      from { transform: translateY(-100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    #demo-banner[hidden] { display: none; }
-
     /* === 阅读进度 === */
     #progress-bar {
       position: fixed;
@@ -523,33 +402,6 @@
 
       body { font-size: 15px; }
 
-      #mini-toc { display: none; }
-
-      .nav-links {
-        display: none;
-        position: absolute;
-        top: var(--nav-height);
-        left: 0; right: 0;
-        flex-direction: column;
-        gap: 0;
-        background: var(--color-nav-bg);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid var(--color-border-light);
-        padding: 6px 0;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.04);
-      }
-
-      .nav-links.mobile-open { display: flex; }
-
-      .nav-links a {
-        padding: 12px 24px;
-        border-bottom: 1px solid var(--color-border-light);
-        font-size: 0.9rem;
-      }
-
-      .nav-title { cursor: pointer; }
-
       .chapter-header h2 { font-size: 1.5rem; }
       .chapter-image { max-height: 180px; border-radius: 2px; }
 
@@ -568,15 +420,24 @@
     }
 
     @media (min-width: 768px) {
-      main, header, footer {
+      main, #ending, footer {
         max-width: var(--max-width);
         margin: 0 auto;
         padding: 0 20px;
       }
     }
+
+    @media (max-width: 767px) {
+      main, #ending, footer {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <div class="bg-layer" aria-hidden="true"></div>
 
   <!-- 封面区 -->
   <header id="cover">
@@ -589,30 +450,6 @@
     <a href="#chapter-b"><span>毕业生B</span><small>支教 + 转法学</small></a>
     <a href="#chapter-c"><span>毕业生C</span><small>保研</small></a>
   </nav>
-
-  <!-- 固定导航条 -->
-  <nav id="main-nav">
-    <span class="nav-title">三条毕业之路</span>
-    <span class="nav-links">
-      <a href="#cover">封面</a>
-      <a href="#chapter-a">毕业生A</a>
-      <a href="#chapter-b">毕业生B</a>
-      <a href="#chapter-c">毕业生C</a>
-      <a href="#ending">尾声</a>
-    </span>
-    <button id="mode-toggle" aria-label="切换演示模式">演示</button>
-  </nav>
-
-  <!-- 桌面端悬浮迷你目录 -->
-  <aside id="mini-toc" aria-label="章节导航">
-    <ul>
-      <li><a href="#cover" title="封面">封面</a></li>
-      <li><a href="#chapter-a" title="毕业生A">毕业生A</a></li>
-      <li><a href="#chapter-b" title="毕业生B">毕业生B</a></li>
-      <li><a href="#chapter-c" title="毕业生C">毕业生C</a></li>
-      <li><a href="#ending" title="尾声">尾声</a></li>
-    </ul>
-  </aside>
 
   <!-- 主内容区 -->
   <main id="content">
@@ -639,9 +476,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- 演示模式提示条 -->
-  <div id="demo-banner" hidden>演示模式 · 点击问题展开答案</div>
 
   <!-- 阅读进度条 -->
   <div id="progress-bar"><div id="progress-fill"></div></div>
@@ -776,7 +610,7 @@
           answer: '我感觉可能还是认同感不同。我感觉我这一条路可能对我自己来说更有意义，因为我看到了教育、孩子们，和他们相处我感觉非常快乐。我感觉通过西部计划这样一条路，能够在这一年里——一年不长，一年对于整个人生来说太短了——我感觉完全可以用一年去实现自己的意义。然后这一年时间我感觉对我今后的人生可能会有更大的帮助。然后其他同学的路我也非常支持。我也想过，偶尔想过自己这条路会不会太笨了，这就是一条中庸之路——你可以来也可以选择不来，如果你想来付出努力一定能来。但是在现实生活中，在不断经历的这些——比如去附中实习那一个月，还有社会上的各种鼓励——我感觉这都极大地反复地鼓舞了我更加坚定地去西部、去祖国需要的地方这条路的决心。',
           children: [
             { id: 'b-q4-a', level: 1, question: '当了研支团团长后，对"奉献集体对自己没好处"这个问题有新的答案吗？',
-              answer: '首先我一开始确实没有打算当这个团长。当然他的优势是显而易见的——可以在未来找工作时比较加分。其实当时选择竞选完全是因为想要选的那个人能力不够，不放心把集体托付给他。我感觉如果这样一个正能量的集体在一个不那么放心的人的带领下……所以我觉得还是要从我对学生工作的认同感谈起。其实我感觉学生阶段的大部分工作或者说职责，归根结底还是职责。我们的成长很快，但是能力的成长很少，因为毕竟工作时间太短，还没有形成一套自己可复制的、可推广的工作经验。所以我觉得归根结底，这些干部的职位都是职责。我也是一直对自己说，要永远做一名初学者，做一名服务者。到了研究生支教团里，我还是秉持着这样一种观念——大家虽然都是学生干部，但是总有一个人要站出来服务这群干部。大家其实过四年一步步干上来都很累。我觉得我愿意去做这个人，这也算是我去西部进行志愿服务、进行奉献的一种观念的体现吧。', children: [] },
+              answer: '首先我一开始确实没有打算当这个团长。当然他的优势是显而易见的——可以在未来找工作时比较加分。所以我觉得还是要从我对学生工作的认同感谈起。其实我感觉学生阶段的大部分工作或者说职责，归根结底还是职责。我们的成长很快，但是能力的成长很少，因为毕竟工作时间太短，还没有形成一套自己可复制的、可推广的工作经验。所以我觉得归根结底，这些干部的职位都是职责。我也是一直对自己说，要永远做一名初学者，做一名服务者。到了研究生支教团里，我还是秉持着这样一种观念——大家虽然都是学生干部，但是总有一个人要站出来服务这群干部。大家其实过四年一步步干上来都很累。我觉得我愿意去做这个人，这也算是我去西部进行志愿服务、进行奉献的一种观念的体现吧。', children: [] },
             { id: 'b-q4-b', level: 1, question: '你对未来最不确定的一点是什么？',
               answer: '未来不确定？我看这个问题我就没想出来……我觉得未来最不确定的，可能是我到了支教地之后，能否顺利地、或者说能否把这群孩子教好，能否成为一名合格的老师。这个"合格"这个词我感觉在我心里还挺重的。我不强求自己成为一名特别优秀的老师，但我不想对不起我这一年在那里待着，这一年时光。', children: [] }
           ]
@@ -939,63 +773,6 @@
   renderChapter('c');
 
   /* ================================================================
-     导航系统
-     ================================================================ */
-  const tocLinks = document.querySelectorAll('#mini-toc a');
-  const navLinks = document.querySelectorAll('.nav-links a');
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        tocLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
-        navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
-      }
-    });
-  }, { rootMargin: '-15% 0px -70% 0px' });
-
-  document.querySelectorAll('.chapter, #cover, #ending').forEach(el => observer.observe(el));
-
-  // 手机端导航下拉
-  const navTitle = document.querySelector('.nav-title');
-  const navLinksContainer = document.querySelector('.nav-links');
-
-  navTitle.addEventListener('click', () => {
-    if (window.innerWidth < 768) {
-      navLinksContainer.classList.toggle('mobile-open');
-    }
-  });
-
-  navLinksContainer.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinksContainer.classList.remove('mobile-open');
-    });
-  });
-
-  /* ================================================================
-     演示模式
-     ================================================================ */
-  const modeToggle = document.getElementById('mode-toggle');
-  const demoBanner = document.getElementById('demo-banner');
-  let isDemoMode = false;
-
-  modeToggle.addEventListener('click', () => {
-    isDemoMode = !isDemoMode;
-    modeToggle.textContent = isDemoMode ? '阅读' : '演示';
-    modeToggle.classList.toggle('demo-active', isDemoMode);
-
-    if (isDemoMode) {
-      demoBanner.hidden = false;
-      document.querySelectorAll('.qa-answer.open').forEach(el => el.classList.remove('open'));
-      updateProgress();
-      saveState();
-    } else {
-      demoBanner.hidden = true;
-      restoreState();
-    }
-  });
-
-  /* ================================================================
      阅读进度 + localStorage
      ================================================================ */
   function updateProgress() {
@@ -1014,7 +791,6 @@
   }
 
   function restoreState() {
-    if (isDemoMode) return;
     const saved = JSON.parse(localStorage.getItem('interview-open-answers') || '[]');
     saved.forEach(id => {
       const el = document.getElementById(id);
